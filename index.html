@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>趣味抽籤系統</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h1>抽籤趣</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" class="active">首頁</a></li>
+                <li><a href="#">好吃招牌菜</a></li>
+                <li><a href="#">地區美食</a></li>
+                <li><a href="#">生活誌</a></li>
+                <li><a href="#">貼文找美食</a></li>
+                <li><a href="#">粉絲激推</a></li>
+                <li><a href="#">聯絡合作</a></li>
+            </ul>
+            <button class="chat-toggle" onclick="toggleChat()">
+                <i class="fas fa-comments"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="initial-screen">
+        <h2 id="random-question">晚餐吃什麼好呢？</h2>
+        <div class="question-buttons">
+            <button onclick="changeQuestion()">換個問題</button>
+            <button onclick="startDrawing()" class="start-btn">開始抽籤</button>
+        </div>
+    </div>
+
+    <div class="container" style="display: none;">
+        <div class="header">
+            <h1 id="main-title">隨機抽籤</h1>
+            <h2 id="random-question">晚餐吃什麼好呢？</h2>
+            <div class="question-buttons">
+                <button onclick="changeQuestion()">換個問題</button>
+            </div>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="main-panel">
+                <div class="action-bar">
+                    <div class="category-selector">
+                        <select id="category-select" onchange="changeCategory()">
+                            <option value="">請選擇分類...</option>
+                        </select>
+                        <select id="subcategory-select" onchange="changeSubCategory()">
+                            <option value="">請選擇子分類...</option>
+                        </select>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="reset-btn" onclick="resetAll()">
+                            <i class="fas fa-redo"></i> 重置
+                        </button>
+                        <div class="add-option">
+                            <input type="text" id="new-option" placeholder="輸入新的選項...">
+                            <button onclick="addOption()">新增</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cards-container">
+                    <!-- 卡牌將在這裡動態生成 -->
+                </div>
+            </div>
+            
+            <div class="side-panel">
+                <div class="category-section">
+                    <div class="category-header">
+                        <h3>分類管理</h3>
+                        <div class="add-category">
+                            <input type="text" id="new-category" placeholder="新增分類...">
+                            <button onclick="addCategory()">新增</button>
+                        </div>
+                    </div>
+                    <div id="categories">
+                        <!-- 分類將在這裡動態生成 -->
+                    </div>
+                </div>
+
+                <div class="business-section">
+                    <h3>商家入駐</h3>
+                    <button onclick="showBusinessForm()" class="business-btn">
+                        <i class="fas fa-store"></i> 申請入駐
+                    </button>
+                </div>
+
+                <div class="history-section">
+                    <h3>抽籤歷史</h3>
+                    <div id="history-list"></div>
+                </div>
+
+                <div class="community-section">
+                    <h3>抽籤社群</h3>
+                    <button onclick="showCommunity()" class="community-btn">
+                        <i class="fas fa-users"></i> 查看創意抽籤
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="shortcuts-button" title="快捷鍵說明">
+        <span class="keyboard-icon">⌨️</span>
+        <div class="shortcuts-tooltip">
+            <h4>快捷鍵說明</h4>
+            <ul>
+                <li><kbd>Space</kbd> - 隨機抽一張</li>
+                <li><kbd>T</kbd> - 開啟提示</li>
+                <li><kbd>X</kbd> - 關閉提示</li>
+                <li><kbd>S</kbd> - 重新洗牌</li>
+                <li><kbd>E</kbd> - 編輯選項</li>
+                <li><kbd>F</kbd> - 全螢幕</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="share-button">
+        <span class="share-icon">分享</span>
+        <div class="share-options">
+            <button onclick="shareToFacebook()" class="facebook">
+                <i class="fab fa-facebook"></i> Facebook
+            </button>
+            <button onclick="shareToX()" class="x">
+                <i class="fab fa-x-twitter"></i> X
+            </button>
+            <button onclick="shareToInstagram()" class="instagram">
+                <i class="fab fa-instagram"></i> Instagram
+            </button>
+            <button onclick="shareToLine()" class="line">
+                <i class="fab fa-line"></i> Line
+            </button>
+        </div>
+    </div>
+
+    <!-- 添加抽籤結果列表 -->
+    <div class="draw-results" style="display: none;">
+        <h3>本次抽籤結果</h3>
+        <ul class="result-list"></ul>
+    </div>
+
+    <!-- 添加 AI 對話框 -->
+    <div class="chat-container" style="display: none;">
+        <div class="chat-header">
+            <h3><i class="fas fa-robot"></i> AI 助手</h3>
+            <button onclick="toggleChat()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="請輸入您的問題...">
+            <button onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
